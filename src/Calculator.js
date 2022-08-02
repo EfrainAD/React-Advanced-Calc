@@ -3,16 +3,36 @@ import React, { Component } from 'react'
 class Calculator extends Component {
     // Declare state variables
     state = {
-        display: 0,
-        stored: null,
+        answer: null,
+        number: null,
         operator: null, // '+', '-', '/', '*', or null
-        new: true // clear out the display.
+        clear: true, // clear out the display.
+        
+        display: '0'
     }
     
     printUpdate = (msg) => {console.log(`${msg}\ndisplay: ${this.state.display} \nstored: ${this.state.stored} \noperator: ${this.state.operator} \nnew: ${this.state.new}`)}
 
     handleClick = (e) => {
-        
+        // Get the number from to the display and converts it to a number or get's a NaN.
+        let holder = parseInt(e)
+
+        // Make sure there are no leading 0's in the display (ex. 00)
+        if ((this.state.display === '0' && e === '0')) {
+            // Do nothing
+        } else {
+            // If input is a number, then add it to the display
+            // NOTE: parseInt() returns '0' as a NaN
+            if (holder || e === '0') {
+                if (this.state.clear === true) {
+                    this.setState({display: holder, answer: holder, clear: false})
+                } else {
+                    holder = this.state.display + e
+                    this.setState({display: holder, answer: holder})
+                }
+            }
+        }
+
     }
     
     render() {
