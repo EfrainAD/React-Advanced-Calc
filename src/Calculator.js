@@ -14,25 +14,27 @@ class Calculator extends Component {
     printUpdate = (msg) => {console.log(`${msg}\ndisplay: ${this.state.display} \nstored: ${this.state.stored} \noperator: ${this.state.operator} \nnew: ${this.state.new}`)}
 
     handleClick = (e) => {
-        // Get the number from to the display and converts it to a number or get's a NaN.
+        // Get the number from to the display and converts it to a number or get's a N.
         let holder = parseInt(e)
 
         // Make sure there are no leading 0's in the display (ex. 00)
         if ((this.state.display === '0' && e === '0')) {
             // Do nothing
-        } else {
-            // If input is a number, then add it to the display
-            // NOTE: parseInt() returns '0' as a NaN
-            if (holder || e === '0') {
-                if (this.state.clear === true) {
-                    this.setState({display: holder, answer: holder, clear: false})
-                } else {
-                    holder = this.state.display + e
-                    this.setState({display: holder, answer: holder})
-                }
+        }
+        // If input is a number, then add it to the display
+        // NOTE: parseInt() returns '0' as a NaN
+        else if (holder || e === '0') {
+            if (this.state.clear === true) {
+                this.setState({display: holder, answer: holder, clear: false})
+            } else {
+                holder = this.state.display + e
+                this.setState({display: holder, answer: holder})
             }
         }
-
+        else if (e === 'AC') {
+            // Set state back to defalut.
+            this.setState({answer: null, number: null, operator: null, clear: true, display: '0'})
+        }
     }
     
     render() {
