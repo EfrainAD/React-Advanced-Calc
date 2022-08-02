@@ -6,17 +6,46 @@ class Calculator extends Component {
         answer: null,
         number: null,
         operator: null, // '+', '-', '/', '*', or null
-        clear: true, // clear out the display.
+        clearDisplay: true, // clearDisplay out the display.
         
         display: '0'
     }
     
     printUpdate = (msg) => {console.log(`${msg}\ndisplay: ${this.state.display} \nstored: ${this.state.stored} \noperator: ${this.state.operator} \nnew: ${this.state.new}`)}
 
+    calculate = () => {
+        const number = parseInt(this.state.display)
+        let answer = null
+        switch (this.state.operator) {
+            case '+':
+                answer = this.state.answer + number
+                break;
+            case '-':
+                answer = this.state.answer - number
+                break;
+            case '*':
+                answer = this.state.answer * number
+                break;
+            case '/':
+                answer = this.state.answer / number
+            break;
+            case '%':
+                answer = this.state.answer % number
+            break;
+            case '':
+        
+            default:
+                console.log('Error message.')
+                break;
+        }
+        console.log(`${this.state.answer} ${this.state.operator} ${number} = ${answer}`)
+        return answer;
+    }
+
     handleClick = (e) => {
         // Get the number from to the display and converts it to a number or get's a N.
         let holder = parseInt(e)
-
+        console.log('input: ', e)
         // Make sure there are no leading 0's in the display (ex. 00)
         if ((this.state.display === '0' && e === '0')) {
             // Do nothing
@@ -24,16 +53,40 @@ class Calculator extends Component {
         // If input is a number, then add it to the display
         // NOTE: parseInt() returns '0' as a NaN
         else if (holder || e === '0') {
-            if (this.state.clear === true) {
-                this.setState({display: holder, answer: holder, clear: false})
+            if (this.state.clearDisplay === true) {
+                this.setState({display: holder, clearDisplay: false})
             } else {
                 holder = this.state.display + e
-                this.setState({display: holder, answer: holder})
+                this.setState({display: holder})
             }
         }
+        // Rest is non-number inputs.
         else if (e === 'AC') {
             // Set state back to defalut.
-            this.setState({answer: null, number: null, operator: null, clear: true, display: '0'})
+            this.setState({answer: null, number: null, operator: null, clearDisplay: true, display: '0'})
+        }
+        
+        // If any of the calculators mathmatical calulations.
+        else if (e === '+' || e === '-' || e === 'x' || e === '/' || e === '%') {
+            if (this.state.display === '0') {
+                // Do nothing, perventing user error.
+            } 
+            else if ( !this.state.answer ) {
+                this.setState({answer: parseInt(this.state.display), 
+                                     operator: e, 
+                                     clearDisplay: true})
+            }
+            else {
+                // Do the math!
+                console.log('this.state.answer: ', this.state.answer)
+                const answer = this.calculate()
+                this.setState({answer: answer, clearDisplay: true, display: answer})
+            }
+        }
+        // I only want the = to do something if there two number already.
+        else if (e === '=' ) {
+            const answer = this.calculate()
+            this.setState({answer: answer, operator: null, clearDisplay: true, display: answer})
         }
     }
     
